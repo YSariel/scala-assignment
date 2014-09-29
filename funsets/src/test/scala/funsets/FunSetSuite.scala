@@ -77,6 +77,9 @@ class FunSetSuite extends FunSuite {
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
+
+    val s4:Set = x => x < 5 && x > -7
+    val s5:Set = x => x > -5 && x < 7
   }
 
   /**
@@ -86,7 +89,7 @@ class FunSetSuite extends FunSuite {
    * Once you finish your implementation of "singletonSet", exchange the
    * function "ignore" by "test".
    */
-  ignore("singletonSet(1) contains 1") {
+  test("singletonSet(1) contains 1") {
     
     /**
      * We create a new instance of the "TestSets" trait, this gives us access
@@ -101,7 +104,7 @@ class FunSetSuite extends FunSuite {
     }
   }
 
-  ignore("union contains all elements") {
+  test("union contains all elements") {
     new TestSets {
       val s = union(s1, s2)
       assert(contains(s, 1), "Union 1")
@@ -109,4 +112,58 @@ class FunSetSuite extends FunSuite {
       assert(!contains(s, 3), "Union 3")
     }
   }
+
+  test("intersect contains all s4&&s5 elements") {
+    new TestSets {
+      val s = intersect(s4, s5)
+      assert(contains(s, 3), "intersect 1")
+      assert(contains(s, -3), "intersect 2")
+      assert(!contains(s, 7), "intersect 3")
+    }
+  }
+
+
+  test("diff contains all s4only elements") {
+    new TestSets {
+      val s = diff(s4, s5)   //-7<   <-5
+      assert(contains(s, -6), "diff 1")
+      assert(!contains(s, 7), "diff 2")
+    }
+  }
+
+  test("filter contains all filtered elements") {
+    new TestSets {
+      val s = filter(s4, x => x >0)
+      assert(contains(s, 3), "filter 1")
+      assert(!contains(s, -5), "filter 2")
+    }
+  }
+
+  test("forall test all elements for p set") {
+    new TestSets {
+      val s = forall(filter(s4, x => x >0), x => x >0)
+      assert(s === true, "forall")
+    }
+  }
+
+  test("exists test if have exists element for p set") {
+    new TestSets {
+      val s = exists(s4, x => x > 3)
+      assert(s === true, "exists")
+    }
+  }
+
+  test("map test for p set") {
+    new TestSets {
+      val s = map(s4, x => x + 1)
+      assert(contains(s, 5) === true, "map")
+    }
+  }
+
+  test("printSet & toString test") {
+    new TestSets {
+      printSet(s4)
+    }
+  }
+
 }
